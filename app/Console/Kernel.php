@@ -13,8 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\SetupStorage::class,
-        Commands\CreatePlaceholderImages::class,
+        Commands\PublishScheduledPosts::class,
     ];
 
     /**
@@ -24,18 +23,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // Schedule the demo database refresh command every 15 minutes in demo mode.
-        $schedule->command('demo:refresh-database')->everyFifteenMinutes();
-
-        // Check for module updates twice daily (with silent output).
-        // Uses caching to avoid hitting the API unnecessarily.
-        $schedule->command('modules:check-updates --silent')
-            ->hourly()
-            ->withoutOverlapping()
-            ->runInBackground();
-
-        // Auto-expire advertisements every hour.
-        $schedule->command('ads:expire')->hourly();
+        // Publish scheduled posts every hour
+        $schedule->command('posts:publish-scheduled')->hourly();
     }
 
     /**
