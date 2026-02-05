@@ -30,18 +30,18 @@ class FrontendApiController extends Controller
                 'featured' => Post::with(['user', 'categories', 'media'])
                     ->where('status', 'published')
                     ->whereJsonContains('post_type_meta->is_featured', true)
-                    ->latest()
+                    ->latestPublished()
                     ->take(4)
                     ->get(),
                 'latest' => Post::with(['user', 'categories', 'media'])
                     ->where('status', 'published')
-                    ->latest()
+                    ->latestPublished()
                     ->take(12)
                     ->get(),
                 'breaking' => Post::with(['user', 'categories', 'media'])
                     ->where('status', 'published')
                     ->whereJsonContains('post_type_meta->is_breaking', true)
-                    ->latest()
+                    ->latestPublished()
                     ->take(5)
                     ->get(),
                 // 'urgent' => Post::where('status', 'published')
@@ -59,7 +59,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'international');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(9)
                     ->get(),
 
@@ -68,7 +68,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'bangladesh');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -77,7 +77,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'politics');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -86,7 +86,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'crime');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -95,7 +95,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'mix');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(20)
                     ->get(),
 
@@ -104,7 +104,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'economy');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -113,7 +113,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'science');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -122,7 +122,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'technology');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -131,7 +131,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'sports');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(4)
                     ->get(),
 
@@ -140,7 +140,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'entertainment');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(4)
                     ->get(),
 
@@ -149,7 +149,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'country');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -158,7 +158,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'engineering');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -167,7 +167,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'health');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -176,7 +176,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'success-story');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -185,7 +185,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'lifestyle');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(4)
                     ->get(),
 
@@ -194,7 +194,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'multimedia');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(20)
                     ->get(),
 
@@ -203,7 +203,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'education');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -212,7 +212,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'environment');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -221,7 +221,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'interview');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -230,7 +230,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'corporate-news');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(3)
                     ->get(),
 
@@ -239,7 +239,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'photo-feature');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(20)
                     ->get(),
 
@@ -248,7 +248,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'opinion');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(4)
                     ->get(),
 
@@ -257,7 +257,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'literature');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(6)
                     ->get(),
                     
@@ -266,7 +266,7 @@ class FrontendApiController extends Controller
                     ->whereHas('categories', function ($q) {
                         $q->where('name', 'top-post');
                     })
-                    ->orderBy('id', 'desc')
+                    ->latestPublished()
                     ->take(12)
                     ->get(),
             ];
@@ -290,7 +290,7 @@ class FrontendApiController extends Controller
             ->whereHas('categories', function ($q) use ($post) {
                 $q->whereIn('id', $post->categories->pluck('id'));
             })
-            ->latest()
+            ->latestPublished()
             ->take(50)
             ->get();
 
@@ -309,7 +309,7 @@ class FrontendApiController extends Controller
             ->whereHas('categories', function ($q) use ($category) {
                 $q->where('id', $category->id);
             })
-            ->latest()
+            ->latestPublished()
             ->paginate(20);
 
         return response()->json([
@@ -328,7 +328,7 @@ class FrontendApiController extends Controller
                 $q->where('title', 'like', "%{$query}%")
                     ->orWhere('content', 'like', "%{$query}%");
             })
-            ->latest()
+            ->latestPublished()
             ->paginate(20);
 
         return response()->json($posts);

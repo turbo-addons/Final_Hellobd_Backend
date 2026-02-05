@@ -381,6 +381,15 @@ class Post extends Model implements SpatieHasMedia
     }
 
     /**
+     * Scope to order posts by published_at for proper scheduling
+     */
+    public function scopeLatestPublished(Builder $query): void
+    {
+        $query->orderBy('published_at', 'desc')
+              ->orderBy('created_at', 'desc'); // fallback
+    }
+
+    /**
      * Scope a query to only include posts of a given type.
      */
     public function scopeType(Builder $query, string $type): void
