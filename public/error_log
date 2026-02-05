@@ -1,0 +1,14 @@
+[27-Jan-2026 11:14:52 UTC] PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /home/webhookacademy/public_html/vendor/laravel/prompts/src/helpers.php on line 16
+[27-Jan-2026 11:15:00 UTC] PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /home/webhookacademy/public_html/vendor/laravel/prompts/src/helpers.php on line 16
+[27-Jan-2026 11:15:04 UTC] PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /home/webhookacademy/public_html/vendor/laravel/prompts/src/helpers.php on line 16
+[27-Jan-2026 11:15:05 UTC] PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /home/webhookacademy/public_html/vendor/laravel/prompts/src/helpers.php on line 16
+[27-Jan-2026 11:15:06 UTC] PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /home/webhookacademy/public_html/vendor/laravel/prompts/src/helpers.php on line 16
+[27-Jan-2026 11:15:07 UTC] PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /home/webhookacademy/public_html/vendor/laravel/prompts/src/helpers.php on line 16
+[27-Jan-2026 11:15:08 UTC] PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /home/webhookacademy/public_html/vendor/laravel/prompts/src/helpers.php on line 16
+[27-Jan-2026 11:15:09 UTC] PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /home/webhookacademy/public_html/vendor/laravel/prompts/src/helpers.php on line 16
+[27-Jan-2026 11:15:10 UTC] PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /home/webhookacademy/public_html/vendor/laravel/prompts/src/helpers.php on line 16
+[27-Jan-2026 11:15:11 UTC] PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /home/webhookacademy/public_html/vendor/laravel/prompts/src/helpers.php on line 16
+[28-Jan-2026 06:52:32 UTC] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 123740160 bytes) in /home/hellobdn/dev.hellobd.news/storage/framework/views/ab3fe361f837d7824bdff614fd6b62d8.php on line 502
+[28-Jan-2026 06:53:01 UTC] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 123740160 bytes) in /home/hellobdn/dev.hellobd.news/storage/framework/views/ab3fe361f837d7824bdff614fd6b62d8.php on line 502
+[28-Jan-2026 10:43:08 UTC] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 113254400 bytes) in /home/hellobdn/dev.hellobd.news/storage/framework/views/ab3fe361f837d7824bdff614fd6b62d8.php on line 503
+[28-Jan-2026 10:43:25 UTC] PHP Fatal error:  Allowed memory size of 268435456 bytes exhausted (tried to allocate 113254400 bytes) in /home/hellobdn/dev.hellobd.news/storage/framework/views/ab3fe361f837d7824bdff614fd6b62d8.php on line 503
