@@ -433,12 +433,12 @@ const PostPropertiesPanel = ({
                         </span>
                     </div>
 
-                    <textarea
+                    <input
+                        type="number"
                         value={excerpt}
                         onChange={(e) => setExcerpt(e.target.value)}
-                        rows={3}
-                        className="form-control-textarea"
-                        placeholder={__("Like '5 min read', '10 min read'...")}
+                        className="form-control"
+                        placeholder={__("Like: ৫")}
                     />
                     <p className="text-xs text-gray-400 mt-1">
                         {__("Optional: Displayed alongside the post title in listings")}
