@@ -90,8 +90,8 @@
                             <input type="url" name="social_media[linkedin]" value="{{ old('social_media.linkedin', $reporter->social_media['linkedin'] ?? '') }}" class="form-control mt-1 w-full rounded border p-2" placeholder="https://linkedin.com/in/username">
                         </div>
                         <div>
-                            <label class="block text-xs text-gray-600 dark:text-gray-400">Instagram</label>
-                            <input type="url" name="social_media[instagram]" value="{{ old('social_media.instagram', $reporter->social_media['instagram'] ?? '') }}" class="form-control mt-1 w-full rounded border p-2" placeholder="https://instagram.com/username">
+                            <label class="block text-xs text-gray-600 dark:text-gray-400">Email</label>
+                            <input type="email" name="social_media[instagram]" value="{{ old('social_media.instagram', $reporter->social_media['instagram'] ?? '') }}" class="form-control mt-1 w-full rounded border p-2" placeholder="Enter Your Email">
                         </div>
                         <div>
                             <label class="block text-xs text-gray-600 dark:text-gray-400">YouTube</label>
@@ -100,7 +100,7 @@
                     </div>
                 </div>
 
-                <!-- <div>
+                <div>
                     <label class="block text-sm font-medium">{{ __('Photo') }}</label>
                     @if(isset($reporter) && $reporter->photo_url)
                         <div class="mb-2">
@@ -108,7 +108,7 @@
                         </div>
                     @endif
                     <input type="file" name="photo" accept="image/*" class="form-control mt-1 w-full rounded border p-2">
-                </div> -->
+                </div>
 
                 @if(isset($reporter))
                 <div>

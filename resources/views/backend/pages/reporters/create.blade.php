@@ -52,7 +52,7 @@
                     @endif
                 </div>
 
-                <!-- <div>
+                <div>
                     <label class="block text-sm font-medium">{{ __('Photo') }}</label>
                     @if(isset($reporter) && $reporter->photo_url)
                         <div class="mb-2">
@@ -60,7 +60,7 @@
                         </div>
                     @endif
                     <input type="file" name="photo" accept="image/*" class="form-control mt-1 w-full rounded border p-2">
-                </div> -->
+                </div>
 
                 @if(isset($reporter))
                 <div>

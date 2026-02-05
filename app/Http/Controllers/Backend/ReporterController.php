@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reporter;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReporterController extends Controller
@@ -79,6 +80,15 @@ class ReporterController extends Controller
             $validated['user_id'] = $helpDeskUser->id;
             $validated['slug'] = \Str::slug($validated['desk_name']);
         } else {
+            // Human type: fetch user first
+            $user = User::find($validated['user_id']);
+            if ($user) {
+                // first_name + last_name
+                $validated['desk_name'] = trim($user->first_name . ' ' . $user->last_name);
+            } else {
+                // fallback
+                $validated['desk_name'] = 'Unknown Reporter';
+            }
             $validated['slug'] = \Str::slug('reporter-' . $validated['user_id']);
         }
         
@@ -88,9 +98,9 @@ class ReporterController extends Controller
         
         $reporter = Reporter::create($validated);
 
-        // if ($request->hasFile('photo')) {
-        //     $reporter->addMediaFromRequest('photo')->toMediaCollection('photo');
-        // }
+        if ($request->hasFile('photo')) {
+            $reporter->addMediaFromRequest('photo')->toMediaCollection('photo');
+        }
 
         return redirect()->route('admin.reporters.index')->with('success', __('Reporter created successfully'));
     }
@@ -133,7 +143,7 @@ class ReporterController extends Controller
             'social_media.facebook' => 'nullable|url',
             'social_media.twitter' => 'nullable|url',
             'social_media.linkedin' => 'nullable|url',
-            'social_media.instagram' => 'nullable|url',
+            'social_media.instagram' => 'nullable',
             'social_media.youtube' => 'nullable|url',
             'verification_status' => 'required|in:pending,verified,rejected',
         ]);
@@ -150,6 +160,15 @@ class ReporterController extends Controller
             $validated['user_id'] = $helpDeskUser->id;
             $validated['slug'] = \Str::slug($validated['desk_name']);
         } else {
+            // Human type: fetch user first
+            $user = User::find($validated['user_id']);
+            if ($user) {
+                // first_name + last_name
+                $validated['desk_name'] = trim($user->first_name . ' ' . $user->last_name);
+            } else {
+                // fallback
+                $validated['desk_name'] = 'Unknown Reporter';
+            }
             // Human হলে form থেকে আসা user_id
             $validated['slug'] = \Str::slug('reporter-' . $validated['user_id']);
         }
@@ -160,10 +179,10 @@ class ReporterController extends Controller
 
         $reporter->update($validated);
 
-        // if ($request->hasFile('photo')) {
-        //     $reporter->clearMediaCollection('photo');
-        //     $reporter->addMediaFromRequest('photo')->toMediaCollection('photo');
-        // }
+        if ($request->hasFile('photo')) {
+            $reporter->clearMediaCollection('photo');
+            $reporter->addMediaFromRequest('photo')->toMediaCollection('photo');
+        }
 
         return redirect()->route('admin.reporters.index')->with('success', __('Reporter updated successfully'));
     }

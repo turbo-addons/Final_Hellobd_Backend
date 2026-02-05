@@ -15,6 +15,7 @@ use Spatie\Image\Enums\Fit;
 class Reporter extends Model implements SpatieHasMedia
 {
     use HasMedia;
+    protected $appends = ['photo_url'];
     protected $fillable = [
         'user_id',
         'type',
@@ -25,7 +26,6 @@ class Reporter extends Model implements SpatieHasMedia
         'bio',
         'location',
         'location_updated_at',
-        'photo',
         'credentials',
         'social_links',
         'social_media',
