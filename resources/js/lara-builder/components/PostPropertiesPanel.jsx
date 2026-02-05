@@ -429,7 +429,7 @@ const PostPropertiesPanel = ({
                 <div className="mb-6">
                     <div className="mb-4 pb-2 border-b border-gray-200">
                         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                            {__("Excerpt")}
+                            {__("Reading Time")}
                         </span>
                     </div>
 
@@ -438,10 +438,10 @@ const PostPropertiesPanel = ({
                         onChange={(e) => setExcerpt(e.target.value)}
                         rows={3}
                         className="form-control-textarea"
-                        placeholder={__("A short summary of the content...")}
+                        placeholder={__("Like '5 min read', '10 min read'...")}
                     />
                     <p className="text-xs text-gray-400 mt-1">
-                        {__("Leave empty to auto-generate from content")}
+                        {__("Optional: Displayed alongside the post title in listings")}
                     </p>
                 </div>
             )}

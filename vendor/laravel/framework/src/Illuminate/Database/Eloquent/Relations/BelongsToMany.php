@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\Concerns\InteractsWithDictionary;
 use Illuminate\Database\Eloquent\Relations\Concerns\InteractsWithPivotTable;
 use Illuminate\Database\Query\Grammars\MySqlGrammar;
 use Illuminate\Database\UniqueConstraintViolationException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -298,7 +299,7 @@ class BelongsToMany extends Relation
      * Build model dictionary keyed by the relation's foreign key.
      *
      * @param  \Illuminate\Database\Eloquent\Collection<int, TRelatedModel>  $results
-     * @return array<array<string, TRelatedModel>>
+     * @return array<array<array-key, TRelatedModel>>
      */
     protected function buildDictionary(EloquentCollection $results)
     {
@@ -307,10 +308,16 @@ class BelongsToMany extends Relation
         // parents without having a possibly slow inner loop for every model.
         $dictionary = [];
 
-        foreach ($results as $result) {
+        $isAssociative = Arr::isAssoc($results->all());
+
+        foreach ($results as $key => $result) {
             $value = $this->getDictionaryKey($result->{$this->accessor}->{$this->foreignPivotKey});
 
-            $dictionary[$value][] = $result;
+            if ($isAssociative) {
+                $dictionary[$value][$key] = $result;
+            } else {
+                $dictionary[$value][] = $result;
+            }
         }
 
         return $dictionary;
@@ -659,7 +666,7 @@ class BelongsToMany extends Relation
     public function createOrFirst(array $attributes = [], array $values = [], array $joining = [], $touch = true)
     {
         try {
-            return $this->getQuery()->withSavePointIfNeeded(fn () => $this->create(array_merge($attributes, $values), $joining, $touch));
+            return $this->getQuery()->withSavepointIfNeeded(fn () => $this->create(array_merge($attributes, $values), $joining, $touch));
         } catch (UniqueConstraintViolationException $e) {
             // ...
         }
@@ -1510,18 +1517,23 @@ class BelongsToMany extends Relation
     /**
      * Specify that the pivot table has creation and update timestamps.
      *
-     * @param  mixed  $createdAt
-     * @param  mixed  $updatedAt
+     * @param  string|null|false  $createdAt
+     * @param  string|null|false  $updatedAt
      * @return $this
      */
     public function withTimestamps($createdAt = null, $updatedAt = null)
     {
-        $this->withTimestamps = true;
+        $this->pivotCreatedAt = $createdAt !== false ? $createdAt : null;
+        $this->pivotUpdatedAt = $updatedAt !== false ? $updatedAt : null;
 
-        $this->pivotCreatedAt = $createdAt;
-        $this->pivotUpdatedAt = $updatedAt;
+        $pivots = array_filter([
+            $createdAt !== false ? $this->createdAt() : null,
+            $updatedAt !== false ? $this->updatedAt() : null,
+        ]);
 
-        return $this->withPivot($this->createdAt(), $this->updatedAt());
+        $this->withTimestamps = ! empty($pivots);
+
+        return $this->withTimestamps ? $this->withPivot($pivots) : $this;
     }
 
     /**

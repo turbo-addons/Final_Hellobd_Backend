@@ -211,7 +211,7 @@
             {{-- Excerpt Card --}}
             @if($post->excerpt)
                 <x-card.card bodyClass="!p-4 !space-y-0">
-                    <x-slot:header>{{ __('Excerpt') }}</x-slot:header>
+                    <x-slot:header>{{ __('Reading Time') }}</x-slot:header>
 
                     <p class="text-gray-600 dark:text-gray-300 italic leading-relaxed text-sm">{{ $post->excerpt }}</p>
                 </x-card.card>
