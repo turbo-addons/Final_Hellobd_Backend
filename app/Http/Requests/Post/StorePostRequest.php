@@ -63,6 +63,9 @@ class StorePostRequest extends FormRequest
             /** @example "Learn the fundamentals of building Laravel applications from scratch." */
             'excerpt' => 'nullable|string',
 
+            /** @example "3" */
+            'reading_time' => 'nullable|integer',
+
             /** @example "publish" */
             'status' => 'required|in:' . $postStatuses,
 

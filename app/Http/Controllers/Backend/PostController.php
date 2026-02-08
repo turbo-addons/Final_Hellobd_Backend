@@ -614,6 +614,7 @@ class PostController extends Controller
         $post->content = $data['content'] ?? '';
         $post->design_json = $data['design_json'] ?? null;
         $post->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($data['content'] ?? ''), 200);
+        $post->reading_time = $data['post_type_meta']['reading_time'] ?? null;
         $post->status = $data['status'];
         $post->post_type = $postType;
         $post->user_id = Auth::id();
@@ -689,10 +690,12 @@ class PostController extends Controller
         $post->content = $data['content'] ?? '';
         $post->design_json = $data['design_json'] ?? null;
         $post->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($data['content'] ?? ''), 200);
+        $post->reading_time = $data['post_type_meta']['reading_time'] ?? null;
         $post->status = $data['status'];
         $post->reporter_id = $data['reporter_id'] ?? null;
         $post->parent_id = $data['parent_id'] ?? null;
         $post->post_type_meta = $data['post_type_meta'] ?? null;
+        $post->edited_by = Auth::id();
 
         // Handle publish date.
         if ($data['status'] === PostStatus::SCHEDULED->value && ! empty($data['published_at'])) {

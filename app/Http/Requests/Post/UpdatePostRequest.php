@@ -64,6 +64,9 @@ class UpdatePostRequest extends FormRequest
             /** @example "Discover the latest best practices for Laravel application development." */
             'excerpt' => 'nullable|string',
 
+            /** @example "3" */
+            'reading_time' => 'nullable|integer',
+
             /** @example "published" */
             'status' => 'required|in:' . $postStatuses,
 

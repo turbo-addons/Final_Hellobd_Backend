@@ -178,6 +178,12 @@ class PostDatatable extends Datatable
                 'sortBy' => 'author',
             ],
             [
+                'id' => 'edited_by',
+                'title' => __('Edited By'),
+                'width' => null,
+                'sortable' => false,
+            ],
+            [
                 'id' => 'post_type_meta',
                 'title' => __('Type'),
                 'width' => null,
@@ -225,9 +231,10 @@ class PostDatatable extends Datatable
     {
         $query = QueryBuilder::for($this->model)
             ->where('post_type', $this->postType)
-            ->select(['id', 'title', 'slug', 'status', 'user_id', 'reporter_id', 'post_type_meta', 'is_sponsored', 'created_at', 'published_at'])
+            ->select(['id', 'title', 'slug', 'status', 'user_id', 'reporter_id', 'edited_by', 'post_type_meta', 'is_sponsored', 'created_at', 'published_at'])
             ->with([
                 'author:id,first_name,last_name,username',
+                'editor:id,first_name,last_name,username',
                 'reporter:id,type,desk_name,user_id',
                 'reporter.user:id,first_name,last_name,username'
             ])
@@ -303,6 +310,14 @@ class PostDatatable extends Datatable
     public function renderAuthorColumn(Post $post): string|Renderable
     {
         return ucfirst($post->author->full_name ?? '');
+    }
+
+    public function renderEditedByColumn(Post $post): string|Renderable
+    {
+        if (!$post->edited_by || !$post->editor) {
+            return '<span class="text-gray-400 text-sm">-</span>';
+        }
+        return ucfirst($post->editor->full_name ?? '');
     }
 
     public function renderCategoryColumn(Post $post): string|Renderable

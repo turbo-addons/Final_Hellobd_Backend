@@ -34,11 +34,13 @@ class Post extends Model implements SpatieHasMedia
 
     protected $fillable = [
         'user_id',
+        'edited_by',
         'reporter_id',
         'post_type',
         'title',
         'slug',
         'excerpt',
+        'reading_time',
         'content',
         'design_json',
         'status',
@@ -108,6 +110,14 @@ class Post extends Model implements SpatieHasMedia
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Get the last editor of the post.
+     */
+    public function editor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'edited_by');
     }
 
     /**
