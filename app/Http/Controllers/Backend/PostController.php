@@ -539,11 +539,18 @@ class PostController extends Controller
             'excerpt' => $post->excerpt,
             'parent_id' => $post->parent_id,
             'reporter_id' => $post->reporter_id,
+            'reading_time' => $post->reading_time,
             'published_at' => $post->published_at?->format('Y-m-d\TH:i'),
             'featured_image_url' => $post->getFeaturedImageUrl(),
         ];
 
         $postTypeMeta = $post->post_type_meta ?? [];
+        
+                
+        // If reading_time is in column but not in post_type_meta, add it ADDED LATTER
+        if ($post->reading_time && !isset($postTypeMeta['reading_time'])) {
+            $postTypeMeta['reading_time'] = $post->reading_time;
+        }
 
         // Get reporters
         $reporters = \App\Models\Reporter::with('user')

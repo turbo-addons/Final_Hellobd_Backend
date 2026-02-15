@@ -25,6 +25,8 @@ return new class () extends Migration {
             $table->json('design_json')->nullable();
             $table->string('status')->default(PostStatus::DRAFT->value);
             $table->json('meta')->nullable();
+            $table->string('feature_video_link')->nullable();
+            $table->string('feature_image_link')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('posts')->onDelete('cascade');
             $table->timestamp('published_at')->nullable();
             $table->timestamps();

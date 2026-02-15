@@ -311,7 +311,7 @@ class PostDatatable extends Datatable
     {
         return ucfirst($post->author->full_name ?? '');
     }
-
+    
     public function renderEditedByColumn(Post $post): string|Renderable
     {
         if (!$post->edited_by || !$post->editor) {

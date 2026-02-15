@@ -63,7 +63,7 @@ class UpdatePostRequest extends FormRequest
 
             /** @example "Discover the latest best practices for Laravel application development." */
             'excerpt' => 'nullable|string',
-
+            
             /** @example "3" */
             'reading_time' => 'nullable|integer',
 
@@ -81,6 +81,9 @@ class UpdatePostRequest extends FormRequest
 
             /** @example "https://youtube.com/watch?v=abc123" */
             'feature_video_link' => 'nullable|url|max:500',
+            
+            /** @example "https://example.com/image.jpg" */
+            'feature_image_link' => 'nullable|url|max:500',
 
             /** @example null */
             'remove_featured_image' => 'nullable',

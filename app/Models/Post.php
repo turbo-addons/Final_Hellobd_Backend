@@ -54,6 +54,7 @@ class Post extends Model implements SpatieHasMedia
         'seo_keywords',
         'og_image',
         'feature_video_link',
+        'feature_image_link',
         'index',
         'follow',
         'views',
@@ -111,7 +112,7 @@ class Post extends Model implements SpatieHasMedia
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
+    
     /**
      * Get the last editor of the post.
      */

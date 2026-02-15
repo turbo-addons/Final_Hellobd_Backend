@@ -76,6 +76,8 @@ class PostController extends ApiController
         $data = $request->validated();
         $data['post_type'] = $postType;
         $data['author_id'] = Auth::id();
+        $data['reporter_id'] = 23;
+        $data['reading_time'] = 3;
 
         $this->authorize('create', Post::class);
 

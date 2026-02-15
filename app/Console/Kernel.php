@@ -25,6 +25,8 @@ class Kernel extends ConsoleKernel
     {
         // Publish scheduled posts every hour
         $schedule->command('posts:publish-scheduled')->hourly();
+        // $schedule->command('posts:publish-scheduled')->everyFiveMinutes();
+
     }
 
     /**
