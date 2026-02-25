@@ -385,18 +385,27 @@ const PostPropertiesPanel = ({
                         )}
 
                         {featuredImage && !removeFeaturedImage && (
-                            <button
-                                type="button"
-                                onClick={handleSelectFeaturedImage}
-                                className="btn btn-default w-full flex items-center justify-center gap-2"
-                            >
-                                <iconify-icon
-                                    icon="mdi:image-edit"
-                                    width="16"
-                                    height="16"
-                                ></iconify-icon>
-                                {__("Change Image")}
-                            </button>
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={handleSelectFeaturedImage}
+                                    className="btn btn-default w-full flex items-center justify-center gap-2"
+                                >
+                                    <iconify-icon
+                                        icon="mdi:image-edit"
+                                        width="16"
+                                        height="16"
+                                    ></iconify-icon>
+                                    {__("Change Image")}
+                                </button>
+                                <input
+                                    type="text"
+                                    value={postTypeMeta?.featured_image_caption || ''}
+                                    onChange={(e) => setPostTypeMeta({...postTypeMeta, featured_image_caption: e.target.value})}
+                                    className="form-control"
+                                    placeholder={__("Featured image caption...")}
+                                />
+                            </>
                         )}
                     </div>
                 </div>
@@ -423,28 +432,47 @@ const PostPropertiesPanel = ({
                     </p>
                 </div>
             </div>
-
+            
             {/* Excerpt Section */}
             {postTypeModel.supports_excerpt && (
                 <div className="mb-6">
                     <div className="mb-4 pb-2 border-b border-gray-200">
                         <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                            {__("Reading Time")}
+                            {__("Excerpt")}
                         </span>
                     </div>
 
-                    <input
-                        type="number"
+                    <textarea
                         value={excerpt}
                         onChange={(e) => setExcerpt(e.target.value)}
-                        className="form-control"
-                        placeholder={__("Like: ৫")}
+                        rows={3}
+                        className="form-control-textarea"
+                        placeholder={__("A short summary of the post...")}
                     />
                     <p className="text-xs text-gray-400 mt-1">
                         {__("Optional: Displayed alongside the post title in listings")}
                     </p>
                 </div>
             )}
+            {/* Reading Time Section */}
+            <div className="mb-6">
+                <div className="mb-4 pb-2 border-b border-gray-200">
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        {__("Reading Time")}
+                    </span>
+                </div>
+
+                <input
+                    type="number"
+                    value={postTypeMeta?.reading_time || ''}
+                    onChange={(e) => setPostTypeMeta({...postTypeMeta, reading_time: e.target.value})}
+                    className="form-control"
+                    placeholder={__("Like: ৫")}
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                    {__("Optional: Reading time in minutes")}
+                </p>
+            </div>
 
             {/* Parent Post (for hierarchical post types) */}
             {postTypeModel.hierarchical &&

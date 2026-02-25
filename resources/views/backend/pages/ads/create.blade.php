@@ -60,7 +60,9 @@
                                     <option value="side_banner_two">Home Side Banner Two</option>
                                     <option value="category_side_banner">Category Page Side Banner</option>
                                     <option value="single_page_side_banner">Single Page Side Banner</option>
+                                    <option value="single_page_inline_banner">Single Page Full Width Inline Banner</option>
                                     <option value="reporter_page_side_banner">Rporter Page Side Banner</option>
+                                    <option value="reporter_page_inline_banner">Rporter Page Full Width Inline Banner</option>
                                 </select>
                             </div>
                         </div>

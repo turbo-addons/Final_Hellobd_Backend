@@ -62,6 +62,13 @@ const TextEditorBlock = ({ props, onUpdate, isSelected, onRegisterTextFormat }) 
                     }
                     p { margin: 0 0 1em 0; }
                     p:last-child { margin-bottom: 0; }
+                    ul, ol { 
+                        margin: 0 0 1em 0; 
+                        padding-left: 40px;
+                    }
+                    ul { list-style-type: disc; }
+                    ol { list-style-type: decimal; }
+                    li { margin: 0.25em 0; }
                 `,
                 setup: (editor) => {
                     editorInstanceRef.current = editor;
@@ -200,7 +207,23 @@ const TextEditorBlock = ({ props, onUpdate, isSelected, onRegisterTextFormat }) 
     };
 
     return (
-        <div style={baseStyle}>
+        <div style={baseStyle} className="text-editor-view">
+            <style>{`
+                .text-editor-view ul,
+                .text-editor-view ol {
+                    margin: 0 0 1em 0;
+                    padding-left: 40px;
+                }
+                .text-editor-view ul {
+                    list-style-type: disc;
+                }
+                .text-editor-view ol {
+                    list-style-type: decimal;
+                }
+                .text-editor-view li {
+                    margin: 0.25em 0;
+                }
+            `}</style>
             {renderContent()}
         </div>
     );

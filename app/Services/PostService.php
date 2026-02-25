@@ -95,19 +95,85 @@ class PostService
     }
 
     /**
+     * Convert plain text to Lara Builder format
+     */
+    private function convertToLaraBuilderFormat(string $content): string
+    {
+        // Check if already in Lara Builder format
+        if (str_contains($content, 'data-lara-block')) {
+            return $content;
+        }
+
+        // Convert plain text to Lara Builder text block format
+        $blockProps = [
+            'content' => $content,
+            'align' => 'left',
+            'color' => '#666666',
+            'fontSize' => '16px',
+            'lineHeight' => '1.6',
+            'layoutStyles' => new \stdClass(),
+            'customCSS' => '',
+            'customClass' => '',
+        ];
+
+        $propsJson = htmlspecialchars(json_encode($blockProps), ENT_QUOTES, 'UTF-8');
+        
+        return '<div class="lb-content"><div data-lara-block="text" data-props=\'' . $propsJson . '\'></div></div>';
+    }
+
+    /**
      * Create a new post
      */
     public function createPost(array $data): Post
     {
+        // Convert content to Lara Builder format if needed
+        $content = $data['content'] ?? '';
+        $designJson = null;
+        
+        if (!empty($content)) {
+            $content = $this->convertToLaraBuilderFormat($content);
+            
+            // Create design_json from content
+            $designJson = [
+                'blocks' => [
+                    [
+                        'id' => uniqid('block_'),
+                        'type' => 'text',
+                        'props' => [
+                            'content' => $data['content'] ?? '',
+                            'align' => 'left',
+                            'color' => '#666666',
+                            'fontSize' => '16px',
+                            'lineHeight' => '1.6',
+                            'layoutStyles' => [],
+                            'customCSS' => '',
+                            'customClass' => '',
+                        ],
+                    ],
+                ],
+                'canvasSettings' => [
+                    'width' => '100%',
+                    'contentPadding' => '32px',
+                    'contentMargin' => '40px',
+                ],
+                'version' => 1,
+            ];
+        }
+
         $post = Post::create([
             'title' => $data['title'],
             'slug' => $data['slug'] ?? str()->slug($data['title']),
-            'content' => $data['content'] ?? '',
+            'content' => $content,
+            'design_json' => $designJson,
             'excerpt' => $data['excerpt'] ?? '',
             'post_type' => $data['post_type'] ?? 'post',
             'status' => $data['status'] ?? PostStatus::DRAFT->value,
             'published_at' => $data['published_at'] ?? null,
             'author_id' => $data['author_id'],
+            'reporter_id' => $data['reporter_id'] ?? 23,
+            'reading_time' => $data['reading_time'] ?? 3,
+            'feature_video_link' => $data['feature_video_link'] ?? null,
+            'feature_image_link' => $data['feature_image_link'] ?? null,
         ]);
 
         // Handle featured image upload to media library.
@@ -139,13 +205,21 @@ class PostService
      */
     public function updatePost(Post $post, array $data): Post
     {
+        // Convert content to Lara Builder format if needed
+        $content = $data['content'] ?? $post->content;
+        if (isset($data['content']) && !empty($data['content'])) {
+            $content = $this->convertToLaraBuilderFormat($data['content']);
+        }
+
         $updateData = [
             'title' => $data['title'] ?? $post->title,
             'slug' => $data['slug'] ?? $post->slug,
-            'content' => $data['content'] ?? $post->content,
+            'content' => $content,
             'excerpt' => $data['excerpt'] ?? $post->excerpt,
             'status' => $data['status'] ?? $post->status,
             'published_at' => $data['published_at'] ?? $post->published_at,
+            'feature_video_link' => $data['feature_video_link'] ?? $post->feature_video_link,
+            'feature_image_link' => $data['feature_image_link'] ?? $post->feature_image_link,
         ];
 
         $post->update($updateData);

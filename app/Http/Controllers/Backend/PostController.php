@@ -539,11 +539,18 @@ class PostController extends Controller
             'excerpt' => $post->excerpt,
             'parent_id' => $post->parent_id,
             'reporter_id' => $post->reporter_id,
+            'reading_time' => $post->reading_time,
             'published_at' => $post->published_at?->format('Y-m-d\TH:i'),
             'featured_image_url' => $post->getFeaturedImageUrl(),
         ];
 
         $postTypeMeta = $post->post_type_meta ?? [];
+        
+                
+        // If reading_time is in column but not in post_type_meta, add it ADDED LATTER
+        if ($post->reading_time && !isset($postTypeMeta['reading_time'])) {
+            $postTypeMeta['reading_time'] = $post->reading_time;
+        }
 
         // Get reporters
         $reporters = \App\Models\Reporter::with('user')
@@ -614,6 +621,7 @@ class PostController extends Controller
         $post->content = $data['content'] ?? '';
         $post->design_json = $data['design_json'] ?? null;
         $post->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($data['content'] ?? ''), 200);
+        $post->reading_time = $data['post_type_meta']['reading_time'] ?? null;
         $post->status = $data['status'];
         $post->post_type = $postType;
         $post->user_id = Auth::id();
@@ -689,10 +697,12 @@ class PostController extends Controller
         $post->content = $data['content'] ?? '';
         $post->design_json = $data['design_json'] ?? null;
         $post->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($data['content'] ?? ''), 200);
+        $post->reading_time = $data['post_type_meta']['reading_time'] ?? null;
         $post->status = $data['status'];
         $post->reporter_id = $data['reporter_id'] ?? null;
         $post->parent_id = $data['parent_id'] ?? null;
         $post->post_type_meta = $data['post_type_meta'] ?? null;
+        $post->edited_by = Auth::id();
 
         // Handle publish date.
         if ($data['status'] === PostStatus::SCHEDULED->value && ! empty($data['published_at'])) {

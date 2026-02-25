@@ -57,7 +57,9 @@
                             <option value="side_banner_two" {{ $ad->placement == 'side_banner_two' ? 'selected' : '' }}>Home Side Banner Two</option>
                             <option value="category_side_banner" {{ $ad->placement == 'category_side_banner' ? 'selected' : '' }}>Category Page Side Banner</option>
                             <option value="single_page_side_banner" {{ $ad->placement == 'single_page_side_banner' ? 'selected' : '' }}>Single Page Side Banner</option>
+                            <option value="single_page_inline_banner" {{ $ad->placement == 'single_page_inline_banner' ? 'selected' : '' }}>Single Page Full Width Inline Banner</option>
                             <option value="reporter_page_side_banner" {{ $ad->placement == 'reporter_page_side_banner' ? 'selected' : '' }}>Reporter Page Side Banner</option>
+                            <option value="reporter_page_inline_banner" {{ $ad->placement == 'reporter_page_inline_banner' ? 'selected' : '' }}>Rporter Page Full Width Inline Banner</option>
                         </select>
                     </div>
                 </div>

@@ -62,6 +62,9 @@ class StorePostRequest extends FormRequest
 
             /** @example "Learn the fundamentals of building Laravel applications from scratch." */
             'excerpt' => 'nullable|string',
+            
+            /** @example "3" */
+            'reading_time' => 'nullable|integer',
 
             /** @example "publish" */
             'status' => 'required|in:' . $postStatuses,
@@ -77,12 +80,19 @@ class StorePostRequest extends FormRequest
 
             /** @example "https://youtube.com/watch?v=abc123" */
             'feature_video_link' => 'nullable|url|max:500',
+            
+            /** @example "https://example.com/image.jpg" */
+            'feature_image_link' => 'nullable|url|max:500',
 
             /** @example "seo_keywords" */
             'meta_keys.*' => 'nullable|string|max:255|regex:/^[a-z0-9_]+$/',
 
             /** @example "laravel, php, web development" */
             'meta_values.*' => 'nullable|string',
+            
+            /** @example [1, 2, 3] */
+            'terms' => 'nullable|array',
+            'terms.*' => 'integer|exists:terms,id',
 
             /** @example "textarea" */
             'meta_types.*' => 'nullable|string|in:input,textarea,number,email,url,text,date,checkbox,select',
