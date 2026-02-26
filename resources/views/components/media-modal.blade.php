@@ -498,7 +498,7 @@ function createMediaItem(modalId, file) {
     let thumbnailHtml = '';
     if (isImage) {
         const imgSrc = file.thumbnail_url || file.url;
-        thumbnailHtml = `<img src="${imgSrc}" alt="${file.name}" class="w-full h-32 object-cover" loading="lazy">`;
+        thumbnailHtml = `<img src="${imgSrc}" alt="${file.name}" class="w-full h-32 object-cover" loading="lazy" crossorigin="anonymous">`;
     } else if (isVideo) {
         thumbnailHtml = `
             <div class="w-full h-32 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900 dark:to-purple-800 flex items-center justify-center">
@@ -654,6 +654,7 @@ function generateMediaPreview(modalId, file, container) {
                  alt="${file.name}"
                  class="w-full h-48 object-contain bg-gray-100 dark:bg-gray-800 cursor-pointer"
                  loading="lazy"
+                 crossorigin="anonymous"
                  onclick="openImageModal('${file.url}', '${file.name}')">
             <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                 <button onclick="openImageModal('${file.url}', '${file.name}')"

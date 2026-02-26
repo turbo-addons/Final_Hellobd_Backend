@@ -25,6 +25,7 @@
         "laravel/telescope": "^5.10",
         "laravel/tinker": "^2.10",
         "laravel/ui": "^4.5",
+        "league/flysystem-aws-s3-v3": "*",
         "livewire/livewire": "^3.6",
         "mhmiton/laravel-modules-livewire": "^5.1",
         "nwidart/laravel-modules": "^12.0",

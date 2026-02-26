@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\NewsPostResource;
 use App\Models\Post;
 use App\Models\Category;
 use App\Models\Term;
@@ -23,258 +24,362 @@ use Illuminate\Support\Facades\DB;
 
 class FrontendApiController extends Controller
 {
+    // public function home()
+    // {
+    //     $data = Cache::remember('api_home', 300, function () {
+    //         return [
+    //             'featured' => Post::with(['user', 'categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereJsonContains('post_type_meta->is_featured', true)
+    //                 ->latestPublished()
+    //                 ->take(4)
+    //                 ->get(),
+    //             'latest' => Post::with(['user', 'categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->latestPublished()
+    //                 ->take(12)
+    //                 ->get(),
+    //             'breaking' => Post::with(['user', 'categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereJsonContains('post_type_meta->is_breaking', true)
+    //                 ->latestPublished()
+    //                 ->take(5)
+    //                 ->get(),
+    //             // 'urgent' => Post::where('status', 'published')
+    //             //     ->latest()
+    //             //     ->take(3)
+    //             //     ->get(),
+    //             'popular' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->orderBy('views', 'desc')
+    //                 ->take(20)
+    //                 ->get(),
+
+    //             'world_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'international');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(9)
+    //                 ->get(),
+
+    //             'bangladeshi_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'bangladesh');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'politics_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'politics');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'crime_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'crime');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'mixed_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'mix');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(20)
+    //                 ->get(),
+
+    //             'economy_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'economy');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'science_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'science');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'technology_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'technology');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'sports_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'sports');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(4)
+    //                 ->get(),
+
+    //             'entertainment_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'entertainment');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(4)
+    //                 ->get(),
+
+    //             'country_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'country');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'engineering_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'engineering');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'health_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'health');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'success_storys_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'success-story');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'lifestyle_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'lifestyle');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(4)
+    //                 ->get(),
+
+    //             'multimedia_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'multimedia');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(20)
+    //                 ->get(),
+
+    //             'education_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'education');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'environment_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'environment');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'interview_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'interview');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'corporate_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'corporate-news');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(3)
+    //                 ->get(),
+
+    //             'photo_feature_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'photo-feature');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(20)
+    //                 ->get(),
+
+    //             'opinion_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'opinion');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(4)
+    //                 ->get(),
+
+    //             'literature_popular_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'literature');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(6)
+    //                 ->get(),
+                    
+    //             'top_post_news' => Post::with(['categories', 'media'])
+    //                 ->where('status', 'published')
+    //                 ->whereHas('categories', function ($q) {
+    //                     $q->where('name', 'top-post');
+    //                 })
+    //                 ->latestPublished()
+    //                 ->take(12)
+    //                 ->get(),
+    //         ];
+    //     });
+
+    //     return response()->json($data);
+    // }
+// app/Http/Controllers/Api/FrontendApiController.php
+
     public function home()
     {
-        $data = Cache::remember('api_home', 300, function () {
-            return [
-                'featured' => Post::with(['user', 'categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereJsonContains('post_type_meta->is_featured', true)
-                    ->latestPublished()
-                    ->take(4)
-                    ->get(),
-                'latest' => Post::with(['user', 'categories', 'media'])
-                    ->where('status', 'published')
-                    ->latestPublished()
-                    ->take(12)
-                    ->get(),
-                'breaking' => Post::with(['user', 'categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereJsonContains('post_type_meta->is_breaking', true)
-                    ->latestPublished()
-                    ->take(5)
-                    ->get(),
-                // 'urgent' => Post::where('status', 'published')
-                //     ->latest()
-                //     ->take(3)
-                //     ->get(),
-                'popular' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->orderBy('views', 'desc')
-                    ->take(20)
-                    ->get(),
+        $data = Cache::remember('api_home_optimized', 300, function () {
+            
+            // Base query with only necessary fields from posts table
+            $baseQuery = Post::select([
+                    'id', 
+                    'title', 
+                    'excerpt', 
+                    'slug', 
+                    'published_at', 
+                    'feature_video_link', 
+                    'feature_image_link',
+                    'post_type_meta',
+                    'views'
+                ])
+                ->with([
+                    'media', // সব কলাম আনুন, কারণ original_url accessor কাজ করার জন্য দরকার
+                    'categories' => function ($q) {
+                        $q->select(['id', 'name', 'name_bn', 'slug']);
+                    }
+                ])
+                ->where('status', 'published');
 
-                'world_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'international');
-                    })
-                    ->latestPublished()
-                    ->take(9)
-                    ->get(),
+            // Featured posts
+            $featured = (clone $baseQuery)
+                ->whereJsonContains('post_type_meta->is_featured', true)
+                ->latestPublished()
+                ->take(4)
+                ->get();
 
-                'bangladeshi_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'bangladesh');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
+            // Latest posts
+            $latest = (clone $baseQuery)
+                ->latestPublished()
+                ->take(12)
+                ->get();
 
-                'politics_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'politics');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
+            // Breaking posts
+            $breaking = (clone $baseQuery)
+                ->whereJsonContains('post_type_meta->is_breaking', true)
+                ->latestPublished()
+                ->take(5)
+                ->get();
 
-                'crime_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'crime');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
+            // Popular posts
+            $popular = (clone $baseQuery)
+                ->orderBy('views', 'desc')
+                ->take(20)
+                ->get();
 
-                'mixed_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'mix');
-                    })
-                    ->latestPublished()
-                    ->take(20)
-                    ->get(),
-
-                'economy_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'economy');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'science_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'science');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'technology_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'technology');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'sports_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'sports');
-                    })
-                    ->latestPublished()
-                    ->take(4)
-                    ->get(),
-
-                'entertainment_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'entertainment');
-                    })
-                    ->latestPublished()
-                    ->take(4)
-                    ->get(),
-
-                'country_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'country');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'engineering_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'engineering');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'health_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'health');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'success_storys_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'success-story');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'lifestyle_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'lifestyle');
-                    })
-                    ->latestPublished()
-                    ->take(4)
-                    ->get(),
-
-                'multimedia_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'multimedia');
-                    })
-                    ->latestPublished()
-                    ->take(20)
-                    ->get(),
-
-                'education_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'education');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'environment_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'environment');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'interview_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'interview');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'corporate_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'corporate-news');
-                    })
-                    ->latestPublished()
-                    ->take(3)
-                    ->get(),
-
-                'photo_feature_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'photo-feature');
-                    })
-                    ->latestPublished()
-                    ->take(20)
-                    ->get(),
-
-                'opinion_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'opinion');
-                    })
-                    ->latestPublished()
-                    ->take(4)
-                    ->get(),
-
-                'literature_popular_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'literature');
-                    })
-                    ->latestPublished()
-                    ->take(6)
-                    ->get(),
-                    
-                'top_post_news' => Post::with(['categories', 'media'])
-                    ->where('status', 'published')
-                    ->whereHas('categories', function ($q) {
-                        $q->where('name', 'top-post');
-                    })
-                    ->latestPublished()
-                    ->take(12)
-                    ->get(),
+            // Category wise queries
+            $categories = [
+                'world_popular_news' => ['category' => 'international', 'take' => 9],
+                'bangladeshi_popular_news' => ['category' => 'bangladesh', 'take' => 3],
+                'politics_popular_news' => ['category' => 'politics', 'take' => 3],
+                'crime_popular_news' => ['category' => 'crime', 'take' => 3],
+                'mixed_popular_news' => ['category' => 'mix', 'take' => 20],
+                'economy_popular_news' => ['category' => 'economy', 'take' => 3],
+                'science_popular_news' => ['category' => 'science', 'take' => 3],
+                'technology_popular_news' => ['category' => 'technology', 'take' => 3],
+                'sports_popular_news' => ['category' => 'sports', 'take' => 4],
+                'entertainment_popular_news' => ['category' => 'entertainment', 'take' => 4],
+                'country_popular_news' => ['category' => 'country', 'take' => 3],
+                'engineering_popular_news' => ['category' => 'engineering', 'take' => 3],
+                'health_popular_news' => ['category' => 'health', 'take' => 3],
+                'success_storys_popular_news' => ['category' => 'success-story', 'take' => 3],
+                'lifestyle_popular_news' => ['category' => 'lifestyle', 'take' => 4],
+                'multimedia_popular_news' => ['category' => 'multimedia', 'take' => 20],
+                'education_popular_news' => ['category' => 'education', 'take' => 3],
+                'environment_popular_news' => ['category' => 'environment', 'take' => 3],
+                'interview_popular_news' => ['category' => 'interview', 'take' => 3],
+                'corporate_popular_news' => ['category' => 'corporate-news', 'take' => 3],
+                'photo_feature_popular_news' => ['category' => 'photo-feature', 'take' => 20],
+                'opinion_popular_news' => ['category' => 'opinion', 'take' => 4],
+                'literature_popular_news' => ['category' => 'literature', 'take' => 6],
+                'top_post_news' => ['category' => 'top-post', 'take' => 12],
             ];
+
+            $result = [
+                'featured' => NewsPostResource::collection($featured),
+                'latest' => NewsPostResource::collection($latest),
+                'breaking' => NewsPostResource::collection($breaking),
+                'popular' => NewsPostResource::collection($popular),
+            ];
+
+            // Process category based queries
+            foreach ($categories as $key => $config) {
+                $posts = (clone $baseQuery)
+                    ->whereHas('categories', function ($q) use ($config) {
+                        $q->where('name', $config['category']);
+                    })
+                    ->latestPublished()
+                    ->take($config['take'])
+                    ->get();
+
+                $result[$key] = NewsPostResource::collection($posts);
+            }
+
+            return $result;
         });
 
         return response()->json($data);
     }
-
     public function post($slug)
     {
         $post = Post::with(['user', 'reporter.user', 'categories', 'tags', 'media'])

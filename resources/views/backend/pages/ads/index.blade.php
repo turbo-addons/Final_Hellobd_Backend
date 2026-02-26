@@ -2,6 +2,7 @@
     <div class="mb-6">
         <div class="flex justify-between items-center">
             <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">Advertisement Management</h1>
+            <img src="https://cdn.hellobd.news/107/ibos_2026-02-26_15-12-01_e7jxMdaQ.png" alt="no image">
             <a href="{{ route('admin.ads.create') }}" class="btn btn-primary">Create New Ad</a>
         </div>
     </div>

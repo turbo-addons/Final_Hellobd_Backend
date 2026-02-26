@@ -17,9 +17,7 @@ use App\Http\Controllers\Api\EmailSettingController;
 use App\Http\Controllers\Api\Builder\MarkdownController;
 use App\Http\Controllers\Backend\Api\TermController as BackendTermController;
 use Illuminate\Support\Facades\Route;
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -74,6 +72,7 @@ Route::get('/translations/{lang}', function (string $lang) {
 
 // Authentication routes.
 Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 
     Route::middleware('auth:sanctum')->group(function () {

@@ -23,6 +23,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -126,7 +127,7 @@ class PostController extends Controller
         // Create post
         $post = new Post();
         $post->title = $data['title'];
-        $post->slug = $data['slug'] ?? Str::slug($data['title']);
+        $post->slug = $data['slug'] ?? $this->generateSlug($data['title']);
         $post->content = $data['content'];
         $post->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($data['content']), 200);
         $post->status = $data['status'];
@@ -260,7 +261,7 @@ class PostController extends Controller
 
         // Update post.
         $post->title = $data['title'];
-        $post->slug = $data['slug'] ?? Str::slug($data['title']);
+        $post->slug = $data['slug'] ?? $this->generateSlug($data['title']);
         $post->content = $data['content'];
         $post->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($data['content']), 200);
         $post->status = $data['status'];
@@ -611,7 +612,7 @@ class PostController extends Controller
         );
 
         // Generate unique slug
-        $baseSlug = $data['slug'] ?? Str::slug($data['title']);
+        $baseSlug = $data['slug'] ?? $this->generateSlug($data['title']);
         $slug = $this->generateUniqueSlug($baseSlug);
 
         // Create post.
@@ -693,7 +694,7 @@ class PostController extends Controller
 
         // Update post.
         $post->title = $data['title'];
-        $post->slug = $data['slug'] ?? Str::slug($data['title']);
+        $post->slug = $data['slug'] ?? $this->generateSlug($data['title']);
         $post->content = $data['content'] ?? '';
         $post->design_json = $data['design_json'] ?? null;
         $post->excerpt = $data['excerpt'] ?? Str::limit(strip_tags($data['content'] ?? ''), 200);
@@ -746,11 +747,16 @@ class PostController extends Controller
 
         $file = $request->file('image');
         $filename = 'post_' . uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('post-images', $filename, 'public');
+        
+        // Upload to R2
+        $path = $file->storeAs('post-images', $filename, 'r2');
+        
+        // Get CDN URL
+        $url = Storage::disk('r2')->url($path);
 
         return response()->json([
             'success' => true,
-            'url' => asset('storage/' . $path),
+            'url' => $url,
         ]);
     }
 
@@ -766,19 +772,24 @@ class PostController extends Controller
 
         $videoFile = $request->file('video');
         $videoFilename = 'post_video_' . uniqid() . '_' . time() . '.' . $videoFile->getClientOriginalExtension();
-        $videoPath = $videoFile->storeAs('post-videos', $videoFilename, 'public');
+        
+        // Upload video to R2
+        $videoPath = $videoFile->storeAs('post-videos', $videoFilename, 'r2');
+        $videoUrl = Storage::disk('r2')->url($videoPath);
 
         $thumbnailUrl = null;
         if ($request->hasFile('thumbnail')) {
             $thumbFile = $request->file('thumbnail');
             $thumbFilename = 'post_thumb_' . uniqid() . '_' . time() . '.' . $thumbFile->getClientOriginalExtension();
-            $thumbPath = $thumbFile->storeAs('post-videos/thumbnails', $thumbFilename, 'public');
-            $thumbnailUrl = asset('storage/' . $thumbPath);
+            
+            // Upload thumbnail to R2
+            $thumbPath = $thumbFile->storeAs('post-videos/thumbnails', $thumbFilename, 'r2');
+            $thumbnailUrl = Storage::disk('r2')->url($thumbPath);
         }
 
         return response()->json([
             'success' => true,
-            'url' => asset('storage/' . $videoPath),
+            'url' => $videoUrl,
             'thumbnailUrl' => $thumbnailUrl,
         ]);
     }
@@ -867,6 +878,17 @@ class PostController extends Controller
             ['post' => $post, 'term_ids' => $termIds],
             PostActionHook::POST_TAXONOMIES_UPDATED
         );
+    }
+
+    /**
+     * Generate slug from title by removing special characters.
+     */
+    protected function generateSlug(string $title): string
+    {
+        // Remove special characters: ?, !, ', ", :
+        $title = str_replace(['?', '!', "'", '"', ':', '&#39;', '&quot;'], '', $title);
+        
+        return Str::slug($title);
     }
 
     /**

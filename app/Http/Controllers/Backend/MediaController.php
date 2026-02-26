@@ -41,15 +41,28 @@ class MediaController extends Controller
         // Transform media items to include proper URLs.
         $result['media']->getCollection()->transform(function ($item) {
             try {
-                if (empty($item->model_type) || $item->model_id == 0) {
-                    $item->url = asset('storage/media/' . $item->file_name);
-                    $item->thumb_url = $item->url;
-                } else {
+                $disk = $item->disk ?? 'public';
+                
+                // Use getUrl() for all media to get proper disk URL
+                try {
                     $item->url = $item->getUrl();
                     $item->thumb_url = $item->hasGeneratedConversion('thumb') ? $item->getUrl('thumb') : $item->getUrl();
+                } catch (\Exception $e) {
+                    // Fallback based on disk
+                    if ($disk === 'r2') {
+                        $item->url = config('filesystems.disks.r2.url') . '/' . $item->id . '/' . $item->file_name;
+                    } else {
+                        $item->url = asset('storage/' . $item->id . '/' . $item->file_name);
+                    }
+                    $item->thumb_url = $item->url;
                 }
             } catch (\Exception $e) {
-                $item->url = asset('storage/media/' . $item->file_name);
+                $disk = $item->disk ?? 'public';
+                if ($disk === 'r2') {
+                    $item->url = config('filesystems.disks.r2.url') . '/' . $item->id . '/' . $item->file_name;
+                } else {
+                    $item->url = asset('storage/' . $item->id . '/' . $item->file_name);
+                }
                 $item->thumb_url = $item->url;
             }
 
@@ -58,6 +71,7 @@ class MediaController extends Controller
 
         // Get upload limits for frontend
         $uploadLimits = MediaHelper::getUploadLimits();
+
 
         $this->setBreadcrumbTitle(__('Media Library'))
             ->setBreadcrumbIcon('lucide:image')
@@ -163,15 +177,46 @@ class MediaController extends Controller
             $thumbnailUrl = '';
 
             try {
+                // Check if file exists on current disk
+                $disk = $item->disk ?? 'public';
+                
                 if (empty($item->model_type) || $item->model_id == 0) {
-                    $url = asset('storage/media/' . $item->file_name);
-                    $thumbnailUrl = $url;
+                    // Standalone media - use proper disk URL
+                    try {
+                        $url = $item->getUrl();
+                        $thumbnailUrl = $item->hasGeneratedConversion('thumb') ? $item->getUrl('thumb') : $item->getUrl();
+                    } catch (\Exception $e) {
+                        // Fallback
+                        if ($disk === 'r2') {
+                            $url = config('filesystems.disks.r2.url') . '/' . $item->id . '/' . $item->file_name;
+                        } else {
+                            $url = asset('storage/' . $item->id . '/' . $item->file_name);
+                        }
+                        $thumbnailUrl = $url;
+                    }
                 } else {
-                    $url = $item->getUrl();
-                    $thumbnailUrl = $item->hasGeneratedConversion('thumb') ? $item->getUrl('thumb') : $item->getUrl();
+                    // Model-attached media
+                    try {
+                        $url = $item->getUrl();
+                        $thumbnailUrl = $item->hasGeneratedConversion('thumb') ? $item->getUrl('thumb') : $item->getUrl();
+                    } catch (\Exception $e) {
+                        // Fallback
+                        if ($disk === 'r2') {
+                            $url = config('filesystems.disks.r2.url') . '/' . $item->id . '/' . $item->file_name;
+                        } else {
+                            $url = asset('storage/' . $item->id . '/' . $item->file_name);
+                        }
+                        $thumbnailUrl = $url;
+                    }
                 }
             } catch (\Exception $e) {
-                $url = asset('storage/media/' . $item->file_name);
+                // Final fallback
+                $disk = $item->disk ?? 'public';
+                if ($disk === 'r2') {
+                    $url = config('filesystems.disks.r2.url') . '/' . $item->id . '/' . $item->file_name;
+                } else {
+                    $url = asset('storage/' . $item->id . '/' . $item->file_name);
+                }
                 $thumbnailUrl = $url;
             }
 
@@ -190,6 +235,7 @@ class MediaController extends Controller
                 'model_type' => $item->model_type,
                 'model_id' => $item->model_id,
                 'is_standalone' => empty($item->model_type) || $item->model_id == 0,
+                'disk' => $item->disk ?? 'public',
             ];
         });
 

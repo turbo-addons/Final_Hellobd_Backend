@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,40 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends ApiController
 {
+    /**
+     * Register a new user.
+     *
+     * @tags Authentication
+     */
+    public function register(RegisterRequest $request): JsonResponse
+    {
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'username' => $request->username,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'User registered successfully',
+            'token' => $token,
+            'user' => [
+                'id' => $user->id,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'full_name' => $user->full_name,
+                'email' => $user->email,
+                'username' => $user->username,
+                'created_at' => $user->created_at,
+                'updated_at' => $user->updated_at,
+            ],
+            'token_type' => 'Bearer',
+        ], 201);
+    }
+
     /**
      * Login user and create token.
      *

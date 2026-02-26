@@ -121,21 +121,24 @@ class MediaLibraryService
 
             // Generate a secure filename
             $safeFileName = $this->generateUniqueFilename($file->getClientOriginalName());
-
-            // Store the file with a secure name
-            $path = $file->storeAs('media', $safeFileName, 'public');
-
-            // Create media record directly in the media table for standalone uploads
+            
+            // Get disk from config
+            $disk = config('media-library.disk_name', 'public');
+            
+            // Generate UUID for media
+            $uuid = Str::uuid();
+            
+            // Create media record first to get ID
             $mediaItem = SpatieMedia::create([
-                'model_type' => '', // Empty for standalone media
-                'model_id' => 0,   // 0 for standalone media
-                'uuid' => Str::uuid(),
+                'model_type' => '', 
+                'model_id' => 0,
+                'uuid' => $uuid,
                 'collection_name' => 'uploads',
                 'name' => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME),
-                'file_name' => basename($path),
+                'file_name' => $safeFileName,
                 'mime_type' => $file->getMimeType(),
-                'disk' => 'public',
-                'conversions_disk' => 'public',
+                'disk' => $disk,
+                'conversions_disk' => $disk,
                 'size' => $file->getSize(),
                 'manipulations' => '[]',
                 'custom_properties' => '[]',
@@ -143,6 +146,10 @@ class MediaLibraryService
                 'responsive_images' => '[]',
                 'order_column' => null,
             ]);
+            
+            // Now upload file to R2 with proper path: {media_id}/{filename}
+            $storagePath = $mediaItem->id . '/' . $safeFileName;
+            Storage::disk($disk)->put($storagePath, file_get_contents($file->getRealPath()));
 
             $uploadedFiles[] = $mediaItem;
         }
